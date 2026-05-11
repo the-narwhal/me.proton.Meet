@@ -58,6 +58,28 @@ jobs:
           sudo apt-get install -y flatpak flatpak-builder xvfb
           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+      - name: Shim xvfb-run for arm64
+        run: |
+          # Xvfb doesn't start reliably on GitHub-hosted arm64 runners.
+          # The flatpak-builder action unconditionally wraps its build command
+          # with xvfb-run, but the build itself has no GUI and doesn't need a
+          # display.  Replace xvfb-run with a pass-through shim that strips its
+          # own flags and exec's whatever command was passed to it.
+          sudo tee /usr/local/bin/xvfb-run > /dev/null << 'EOF'
+          #!/bin/sh
+          while [ $# -gt 0 ]; do
+            case "$1" in
+              -a|--auto-servernum) shift ;;
+              -e|--error-file|-n|--server-num|-p|--server-args|-w|--wait) shift 2 ;;
+              --) shift; break ;;
+              -*) shift ;;
+              *) break ;;
+            esac
+          done
+          exec "$@"
+          EOF
+          sudo chmod +x /usr/local/bin/xvfb-run
+
       - name: Build Flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
