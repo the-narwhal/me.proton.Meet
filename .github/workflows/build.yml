@@ -56,13 +56,21 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y flatpak flatpak-builder xvfb
-          # Add the remote to the system installation (required for sudo installs below).
           sudo flatpak remote-add --system --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          # Pre-install the runtimes as root. The flatpak-builder action calls
-          # `flatpak --system install` as the unprivileged runner user, which
-          # polkit rejects on bare runners.  Installing as root first means
-          # the action's install step finds everything already in place and
-          # exits 0 without needing elevated permissions.
+          # On bare GitHub-hosted runners the polkit system helper rejects
+          # system-wide flatpak operations (GetRevokefsFd, Deploy) from
+          # non-root users.  A JS rule in rules.d grants unconditional YES
+          # for all org.freedesktop.Flatpak.* actions in CI.
+          sudo tee /etc/polkit-1/rules.d/10-flatpak-ci.rules > /dev/null << 'POLKIT'
+          polkit.addRule(function(action, subject) {
+              if (action.id.indexOf("org.freedesktop.Flatpak") === 0) {
+                  return polkit.Result.YES;
+              }
+          });
+          POLKIT
+          sudo systemctl restart polkit
+          # Pre-install the runtimes as root so the action's dep-install
+          # step is a fast no-op rather than a full download.
           sudo flatpak install -y --noninteractive flathub \
             org.freedesktop.Platform/aarch64/25.08 \
             org.freedesktop.Sdk/aarch64/25.08 \
