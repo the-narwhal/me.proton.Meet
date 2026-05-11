@@ -13,14 +13,25 @@ standalone Flatpak.
 
 ### From a GitHub Release bundle (recommended)
 
-1. Download `me.proton.Meet.flatpak` from the [latest release](../../releases/latest).
-2. Install it:
+1. Check your architecture if unsure: `uname -m`
+2. Download the correct bundle from the [latest release](../../releases/latest):
+
+| Architecture | File |
+|---|---|
+| x86_64 (most desktops/laptops) | `me.proton.Meet.flatpak` |
+| aarch64 / arm64 | `me.proton.Meet-aarch64.flatpak` |
+
+3. Install it:
 
 ```sh
+# x86_64
 flatpak install --user me.proton.Meet.flatpak
+
+# aarch64
+flatpak install --user me.proton.Meet-aarch64.flatpak
 ```
 
-3. Run it:
+4. Run it:
 
 ```sh
 flatpak run me.proton.Meet
@@ -34,7 +45,7 @@ flatpak run me.proton.Meet
 |---|---|---|
 | `flatpak-external-data-checker` | Weekly (Sunday 00:00 UTC) | Detects new `proton-meet@x.y.z.w` upstream tags; opens a PR bumping `me.proton.Meet.yml` |
 | `update-generated-sources` | Push to `main` touching the manifest | Clones WebClients at the new tag, strips private-registry stanzas, runs `flatpak-node-generator`, opens a PR updating `generated-sources.json` |
-| `build` | Push to `main` touching the manifest or generated-sources | Builds the Flatpak with `flatpak-builder` and publishes a GitHub Release with the `.flatpak` bundle |
+| `build` | Push to `main` touching the manifest or generated-sources | Builds the Flatpak for **x86_64** and **aarch64** in parallel with `flatpak-builder` and publishes a GitHub Release with both `.flatpak` bundles |
 
 ---
 
