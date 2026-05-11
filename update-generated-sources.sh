@@ -9,10 +9,10 @@
 # ────────────
 #   git             — to clone the upstream repo
 #   python3         — to run strip-private-registry-stanzas.py
-#   flatpak-node-generator — install with:
-#                       pip install flatpak-node-generator
-#                     or via pipx:
-#                       pipx install flatpak-node-generator
+#   flatpak-node-generator — install from git (PyPI version is outdated):
+#                       pip install git+https://github.com/flatpak/flatpak-builder-tools.git#subdirectory=node
+#                     or via pipx (recommended):
+#                       pipx install git+https://github.com/flatpak/flatpak-builder-tools.git#subdirectory=node
 #
 # Usage
 # ─────
@@ -89,7 +89,7 @@ python3 "$STRIP_SCRIPT" \
 echo ""
 echo "==> Generating generated-sources.json..."
 echo "    (this typically takes 5–15 minutes — packages are downloaded from npm)"
-flatpak-node-generator yarn-berry "$TMPDIR/yarn-public.lock" \
+flatpak-node-generator yarn "$TMPDIR/yarn-public.lock" \
     --max-parallel 16 \
     -o "$SCRIPT_DIR/generated-sources.json"
 

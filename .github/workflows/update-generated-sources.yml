@@ -36,7 +36,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install flatpak-node-generator
-        run: pip install flatpak-node-generator
+        run: pip install git+https://github.com/flatpak/flatpak-builder-tools.git#subdirectory=node
 
       - name: Resolve upstream tag
         id: resolve-tag
@@ -73,7 +73,7 @@ jobs:
 
       - name: Generate generated-sources.json
         run: |
-          flatpak-node-generator yarn-berry /tmp/yarn-public.lock \
+          flatpak-node-generator yarn /tmp/yarn-public.lock \
             --max-parallel 16 \
             -o generated-sources.json
 
@@ -94,7 +94,7 @@ jobs:
             **Steps performed:**
             1. Cloned `ProtonMail/WebClients` at `${{ steps.resolve-tag.outputs.tag }}`
             2. Stripped private-registry stanzas with `strip-private-registry-stanzas.py`
-            3. Ran `flatpak-node-generator yarn-berry --max-parallel 16`
+            3. Ran `flatpak-node-generator yarn --max-parallel 16`
 
             After merging, the `build` workflow will run and publish a new release.
           labels: "automated, dependencies"
