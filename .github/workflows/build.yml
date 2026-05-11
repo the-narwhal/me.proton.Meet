@@ -56,7 +56,18 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y flatpak flatpak-builder xvfb
-          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          # Add the remote to the system installation (required for sudo installs below).
+          sudo flatpak remote-add --system --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          # Pre-install the runtimes as root. The flatpak-builder action calls
+          # `flatpak --system install` as the unprivileged runner user, which
+          # polkit rejects on bare runners.  Installing as root first means
+          # the action's install step finds everything already in place and
+          # exits 0 without needing elevated permissions.
+          sudo flatpak install -y --noninteractive flathub \
+            org.freedesktop.Platform/aarch64/25.08 \
+            org.freedesktop.Sdk/aarch64/25.08 \
+            org.freedesktop.Sdk.Extension.node22/aarch64/25.08 \
+            org.electronjs.Electron2.BaseApp/aarch64/25.08
 
       - name: Shim xvfb-run for arm64
         run: |
