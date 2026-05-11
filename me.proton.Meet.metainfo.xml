@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2026 Trevor -->
 <component type="desktop-application">
   <id>me.proton.Meet</id>
@@ -28,10 +28,8 @@
     <ul>
       <li>End-to-end encrypted video calls and meetings</li>
       <li>Screen sharing</li>
-      <li
-            >Open meeting links directly from the browser via the proton-meet:// protocol handler</li>
-      <li
-            >Picture-in-Picture (PiP) window to keep calls visible while working</li>
+      <li>Open meeting links directly from the browser via the proton-meet:// protocol handler</li>
+      <li>Picture-in-Picture (PiP) window to keep calls visible while working</li>
     </ul>
   </description>
 
@@ -67,6 +65,9 @@
   </content_rating>
 
   <releases>
+    <release version="0.4.16.1" date="2026-05-11">
+      <description></description>
+    </release>
     <release version="0.4.16.0" date="2026-05-08">
       <description>
         <p>Initial Flatpak release of Proton Meet, wrapping upstream tag proton-meet@0.4.16.0.</p>
