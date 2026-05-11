@@ -33,7 +33,7 @@ processes top-level stanza keys, not nested values).
 
 To regenerate generated-sources.json after running this script:
 
-    flatpak-node-generator yarn <output-yarn.lock> \
+    flatpak-node-generator yarn-berry <output-yarn.lock> \
         --max-parallel 16 \
         -o generated-sources.json
 """

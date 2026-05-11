@@ -89,7 +89,7 @@ python3 "$STRIP_SCRIPT" \
 echo ""
 echo "==> Generating generated-sources.json..."
 echo "    (this typically takes 5–15 minutes — packages are downloaded from npm)"
-flatpak-node-generator yarn "$TMPDIR/yarn-public.lock" \
+flatpak-node-generator yarn-berry "$TMPDIR/yarn-public.lock" \
     --max-parallel 16 \
     -o "$SCRIPT_DIR/generated-sources.json"
 
