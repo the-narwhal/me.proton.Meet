@@ -1,6 +1,41 @@
 [
     {
         "type": "archive",
+        "url": "https://cdn.playwright.dev/builds/cft/145.0.7632.6/linux64/chrome-headless-shell-linux64.zip",
+        "strip-components": 0,
+        "sha256": "2536e97d8f410df0394b3e7c4252e88ce9f239f04f3af4e247a26caf45baf49e",
+        "dest": "flatpak-node/cache/ms-playwright/chromium-headless-shell-1208"
+    },
+    {
+        "type": "archive",
+        "url": "https://cdn.playwright.dev/builds/cft/145.0.7632.6/linux64/chrome-linux64.zip",
+        "strip-components": 0,
+        "sha256": "b5e3195041af345a668d110f5daf5581961fa3608626ea588c97dd0fe81c4e38",
+        "dest": "flatpak-node/cache/ms-playwright/chromium-1208"
+    },
+    {
+        "type": "archive",
+        "url": "https://cdn.playwright.dev/builds/ffmpeg/1011/ffmpeg-linux.zip",
+        "strip-components": 0,
+        "sha256": "ebc74fc5b94830176a3c2914ae96bd8bc7f6a91f4f33890230f84a172ee61ccc",
+        "dest": "flatpak-node/cache/ms-playwright/ffmpeg-1011"
+    },
+    {
+        "type": "archive",
+        "url": "https://cdn.playwright.dev/builds/firefox/1509/firefox-ubuntu-22.04.zip",
+        "strip-components": 0,
+        "sha256": "3c2fad29c819bb82d7ae55ab0b83c9dd1d7f9ee9dd686b50965fed4b97c6aa93",
+        "dest": "flatpak-node/cache/ms-playwright/firefox-1509"
+    },
+    {
+        "type": "archive",
+        "url": "https://cdn.playwright.dev/builds/webkit/2248/webkit-ubuntu-24.04.zip",
+        "strip-components": 0,
+        "sha256": "c8ea5ee749558b9aeb50c00dd833dfb80e3719a150f5363749aa9699c896de2c",
+        "dest": "flatpak-node/cache/ms-playwright/webkit-2248"
+    },
+    {
+        "type": "archive",
         "url": "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.19.11.tgz",
         "strip-components": 1,
         "sha512": "dc2464afdfaf095d9725b8f08338cfb4ef13d126549916656be50bd63c3e5ea1d93e43e0662c96bdb0ef97daea00df1997ba891743bff7270cb6353aec737dfd",
@@ -22598,9 +22633,9 @@
     },
     {
         "type": "file",
-        "url": "https://registry.npmjs.org/livekit-client/-/livekit-client-2.18.6.tgz",
-        "sha512": "2533925a446b142f4a6b23ef6ac6e75e9026b7e27f20b93973c7f7c549a3a9acd993b8fd413ca3d2a8431c881dcb2ff9285aa3a9a466b4fbbf227301f969643c",
-        "dest-filename": "livekit-client-bGl2ZWtpdC1jbGllbnRAbnBtOjIuMTguNg==-bcaffd90f4.tgz",
+        "url": "https://registry.npmjs.org/livekit-client/-/livekit-client-2.18.9.tgz",
+        "sha512": "9747000dcc7104258204cb54f5e598e91a5d6d17e0039735ff4e729e0417a34f26732dd53adb66484da9359ef8936076cd0ca6d78f60e7f635077bead855b097",
+        "dest-filename": "livekit-client-bGl2ZWtpdC1jbGllbnRAbnBtOjIuMTguOQ==-47a2aee810.tgz",
         "dest": "flatpak-node/yarn-berry/cache/locator"
     },
     {
@@ -33627,6 +33662,36 @@
     },
     {
         "type": "inline",
+        "contents": "flatpak-node-cache",
+        "dest-filename": "INSTALLATION_COMPLETE",
+        "dest": "flatpak-node/cache/ms-playwright/chromium-1208"
+    },
+    {
+        "type": "inline",
+        "contents": "flatpak-node-cache",
+        "dest-filename": "INSTALLATION_COMPLETE",
+        "dest": "flatpak-node/cache/ms-playwright/chromium-headless-shell-1208"
+    },
+    {
+        "type": "inline",
+        "contents": "flatpak-node-cache",
+        "dest-filename": "INSTALLATION_COMPLETE",
+        "dest": "flatpak-node/cache/ms-playwright/ffmpeg-1011"
+    },
+    {
+        "type": "inline",
+        "contents": "flatpak-node-cache",
+        "dest-filename": "INSTALLATION_COMPLETE",
+        "dest": "flatpak-node/cache/ms-playwright/firefox-1509"
+    },
+    {
+        "type": "inline",
+        "contents": "flatpak-node-cache",
+        "dest-filename": "INSTALLATION_COMPLETE",
+        "dest": "flatpak-node/cache/ms-playwright/webkit-2248"
+    },
+    {
+        "type": "inline",
         "contents": "{\"repo_dir_rel\": \"../../tmp/electron-windows-msix\", \"resolution\": \"electron-windows-msix@https://github.com/Swiip/electron-windows-msix.git#commit=f1c1f4f46439c7d94569afdedd9561d09d4a1c54\", \"checksum\": \"c8b2786b96972ae1c08362ad5f48d9ecd07a6634fe38675a8973ceea099a70a4f44b59722b33d0c1f8d56baa9953e6d84de5126cb5a27340de1d91b185b92f4b\"}",
         "dest-filename": "electron-windows-msix-Z2l0-c8b2786b96.git",
         "dest": "flatpak-node/yarn-berry/cache/locator"
@@ -33763,7 +33828,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm64@0.19.11/bin/esbuild\" \"bin/@esbuild/linux-arm64@0.19.11\"",
-            "ln -sf \"linux-arm64@0.19.11\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm64@0.19.11\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33775,7 +33840,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm64@0.21.2/bin/esbuild\" \"bin/@esbuild/linux-arm64@0.21.2\"",
-            "ln -sf \"linux-arm64@0.21.2\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm64@0.21.2\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33787,7 +33852,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm64@0.21.5/bin/esbuild\" \"bin/@esbuild/linux-arm64@0.21.5\"",
-            "ln -sf \"linux-arm64@0.21.5\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm64@0.21.5\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33799,7 +33864,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm64@0.27.4/bin/esbuild\" \"bin/@esbuild/linux-arm64@0.27.4\"",
-            "ln -sf \"linux-arm64@0.27.4\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm64@0.27.4\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33811,7 +33876,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm64@0.28.0/bin/esbuild\" \"bin/@esbuild/linux-arm64@0.28.0\"",
-            "ln -sf \"linux-arm64@0.28.0\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm64@0.28.0\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33823,7 +33888,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm@0.19.11/bin/esbuild\" \"bin/@esbuild/linux-arm@0.19.11\"",
-            "ln -sf \"linux-arm@0.19.11\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm@0.19.11\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33835,7 +33900,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm@0.21.2/bin/esbuild\" \"bin/@esbuild/linux-arm@0.21.2\"",
-            "ln -sf \"linux-arm@0.21.2\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm@0.21.2\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33847,7 +33912,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm@0.21.5/bin/esbuild\" \"bin/@esbuild/linux-arm@0.21.5\"",
-            "ln -sf \"linux-arm@0.21.5\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm@0.21.5\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33859,7 +33924,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm@0.27.4/bin/esbuild\" \"bin/@esbuild/linux-arm@0.27.4\"",
-            "ln -sf \"linux-arm@0.27.4\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm@0.27.4\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33871,7 +33936,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-arm@0.28.0/bin/esbuild\" \"bin/@esbuild/linux-arm@0.28.0\"",
-            "ln -sf \"linux-arm@0.28.0\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-arm@0.28.0\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33883,7 +33948,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-ia32@0.19.11/bin/esbuild\" \"bin/@esbuild/linux-ia32@0.19.11\"",
-            "ln -sf \"linux-ia32@0.19.11\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-ia32@0.19.11\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33895,7 +33960,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-ia32@0.21.2/bin/esbuild\" \"bin/@esbuild/linux-ia32@0.21.2\"",
-            "ln -sf \"linux-ia32@0.21.2\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-ia32@0.21.2\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33907,7 +33972,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-ia32@0.21.5/bin/esbuild\" \"bin/@esbuild/linux-ia32@0.21.5\"",
-            "ln -sf \"linux-ia32@0.21.5\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-ia32@0.21.5\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33919,7 +33984,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-ia32@0.27.4/bin/esbuild\" \"bin/@esbuild/linux-ia32@0.27.4\"",
-            "ln -sf \"linux-ia32@0.27.4\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-ia32@0.27.4\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33931,7 +33996,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-ia32@0.28.0/bin/esbuild\" \"bin/@esbuild/linux-ia32@0.28.0\"",
-            "ln -sf \"linux-ia32@0.28.0\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-ia32@0.28.0\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33943,7 +34008,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-x64@0.19.11/bin/esbuild\" \"bin/@esbuild/linux-x64@0.19.11\"",
-            "ln -sf \"linux-x64@0.19.11\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-x64@0.19.11\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33955,7 +34020,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-x64@0.21.2/bin/esbuild\" \"bin/@esbuild/linux-x64@0.21.2\"",
-            "ln -sf \"linux-x64@0.21.2\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-x64@0.21.2\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33967,7 +34032,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-x64@0.21.5/bin/esbuild\" \"bin/@esbuild/linux-x64@0.21.5\"",
-            "ln -sf \"linux-x64@0.21.5\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-x64@0.21.5\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33979,7 +34044,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-x64@0.27.4/bin/esbuild\" \"bin/@esbuild/linux-x64@0.27.4\"",
-            "ln -sf \"linux-x64@0.27.4\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-x64@0.27.4\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
@@ -33991,7 +34056,7 @@
         "commands": [
             "mkdir -p \"bin/@esbuild\"",
             "cp \".package/@esbuild/linux-x64@0.28.0/bin/esbuild\" \"bin/@esbuild/linux-x64@0.28.0\"",
-            "ln -sf \"linux-x64@0.28.0\" \"bin/esbuild-current\""
+            "ln -sf \"@esbuild/linux-x64@0.28.0\" \"bin/esbuild-current\""
         ],
         "dest": "flatpak-node/cache/esbuild",
         "only-arches": [
