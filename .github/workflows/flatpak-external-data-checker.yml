@@ -1,0 +1,50 @@
+name: Check for upstream updates
+
+on:
+  schedule:
+    # Every Sunday at 00:00 UTC
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    name: flatpak-external-data-checker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # flatpak-external-data-checker reads x-checker-data from the manifest,
+      # checks for new upstream tags matching ^proton-meet@([\d.]+)$, and
+      # updates the tag: and commit: fields in-place when a newer tag is found.
+      - name: Run flatpak-external-data-checker
+        uses: docker://ghcr.io/flathub/flatpak-external-data-checker:latest
+        with:
+          args: --update --edit-only me.proton.Meet.yml
+
+      # If the manifest changed, open a PR so the update can be reviewed before
+      # triggering the (slow) generated-sources regeneration.
+      - name: Open PR if manifest changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "auto/upstream-bump"
+          delete-branch: true
+          commit-message: |
+            chore: bump upstream tag in me.proton.Meet.yml
+          title: "Update upstream Proton Meet tag"
+          body: |
+            Automated update opened by `flatpak-external-data-checker`.
+
+            The manifest's `tag:` and `commit:` fields have been updated to the
+            latest upstream `proton-meet@x.y.z.w` tag.
+
+            **Next step:** after merging this PR, the
+            `update-generated-sources` workflow will automatically run and open
+            a follow-up PR regenerating `generated-sources.json`.
+          labels: "automated, dependencies"

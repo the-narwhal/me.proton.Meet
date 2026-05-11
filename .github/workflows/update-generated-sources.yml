@@ -1,0 +1,98 @@
+name: Update generated-sources.json
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "me.proton.Meet.yml"
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: >
+          Upstream tag to generate sources for (e.g. proton-meet@0.4.17.0).
+          Leave blank to read the tag from me.proton.Meet.yml.
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regenerate:
+    name: Regenerate generated-sources.json
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install flatpak-node-generator
+        run: pip install flatpak-node-generator
+
+      - name: Resolve upstream tag
+        id: resolve-tag
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            TAG=$(python3 - <<'EOF'
+          import re, sys
+          text = open("me.proton.Meet.yml").read()
+          m = re.search(r'type:\s*git.*?tag:\s*([^\s#\n]+)', text, re.DOTALL)
+          if m:
+              print(m.group(1).strip("'\""))
+          else:
+              sys.exit("Could not find tag in me.proton.Meet.yml")
+          EOF
+            )
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Clone WebClients at ${{ steps.resolve-tag.outputs.tag }}
+        run: |
+          git clone \
+            --depth=1 \
+            --branch "${{ steps.resolve-tag.outputs.tag }}" \
+            https://github.com/ProtonMail/WebClients \
+            /tmp/WebClients
+
+      - name: Strip private-registry stanzas from yarn.lock
+        run: |
+          python3 strip-private-registry-stanzas.py \
+            /tmp/WebClients/yarn.lock \
+            /tmp/yarn-public.lock
+
+      - name: Generate generated-sources.json
+        run: |
+          flatpak-node-generator yarn /tmp/yarn-public.lock \
+            --max-parallel 16 \
+            -o generated-sources.json
+
+      - name: Open PR with updated generated-sources.json
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "auto/generated-sources-${{ steps.resolve-tag.outputs.tag }}"
+          delete-branch: true
+          commit-message: |
+            chore: regenerate generated-sources.json for ${{ steps.resolve-tag.outputs.tag }}
+          title: "Update generated-sources.json for ${{ steps.resolve-tag.outputs.tag }}"
+          body: |
+            Automated regeneration of `generated-sources.json`.
+
+            **Upstream tag:** `${{ steps.resolve-tag.outputs.tag }}`
+
+            **Steps performed:**
+            1. Cloned `ProtonMail/WebClients` at `${{ steps.resolve-tag.outputs.tag }}`
+            2. Stripped private-registry stanzas with `strip-private-registry-stanzas.py`
+            3. Ran `flatpak-node-generator yarn --max-parallel 16`
+
+            After merging, the `build` workflow will run and publish a new release.
+          labels: "automated, dependencies"

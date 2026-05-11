@@ -1,0 +1,75 @@
+name: Build and release Flatpak
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "me.proton.Meet.yml"
+      - "generated-sources.json"
+      - "me.proton.Meet.desktop"
+      - "me.proton.Meet.metainfo.xml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (x86_64)
+    runs-on: ubuntu-latest
+    # 6-hour max — Electron + Webpack + Yarn monorepo is slow
+    timeout-minutes: 360
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
+      options: --privileged
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from manifest
+        id: version
+        run: |
+          VERSION=$(python3 -c "
+          import re
+          text = open('me.proton.Meet.yml').read()
+          m = re.search(r'tag:\s*proton-meet@([\d.]+)', text)
+          print(m.group(1) if m else '0.0.0.0')
+          ")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building version: $VERSION"
+
+      - name: Build Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: me.proton.Meet.flatpak
+          manifest-path: me.proton.Meet.yml
+          # Cache is keyed on the generated-sources hash so a clean rebuild
+          # happens whenever the npm dependency set changes.
+          cache-key: flatpak-builder-${{ hashFiles('generated-sources.json') }}
+          upload-artifact: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Proton Meet ${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: me.proton.Meet.flatpak
+          body: |
+            ## Proton Meet ${{ steps.version.outputs.version }}
+
+            > **Community packaging** — not officially supported by Proton AG.
+
+            ### Install
+
+            Download `me.proton.Meet.flatpak` below and run:
+
+            ```sh
+            flatpak install --user me.proton.Meet.flatpak
+            flatpak run me.proton.Meet
+            ```
+
+            **Upstream source:** [`proton-meet@${{ steps.version.outputs.version }}`](https://github.com/ProtonMail/WebClients/releases/tag/proton-meet@${{ steps.version.outputs.version }})
