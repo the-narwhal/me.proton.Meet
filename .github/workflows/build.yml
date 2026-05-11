@@ -14,25 +14,16 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build (${{ matrix.arch }})
-    runs-on: ${{ matrix.runner }}
+  build-x86_64:
+    name: Build (x86_64)
+    runs-on: ubuntu-latest
     # 6-hour max — Electron + Webpack + Yarn monorepo is slow
     timeout-minutes: 360
+    # The flathub-infra container ships flatpak + remotes pre-configured and
+    # has a linux/amd64 image, so we use it here as-is.
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
       options: --privileged
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: x86_64
-            runner: ubuntu-latest
-            bundle: me.proton.Meet.flatpak
-          - arch: aarch64
-            runner: ubuntu-24.04-arm
-            bundle: me.proton.Meet-aarch64.flatpak
 
     steps:
       - name: Checkout
@@ -41,17 +32,44 @@ jobs:
       - name: Build Flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: ${{ matrix.bundle }}
+          bundle: me.proton.Meet.flatpak
           manifest-path: me.proton.Meet.yml
-          arch: ${{ matrix.arch }}
-          # Cache is keyed on arch + generated-sources hash so a clean rebuild
-          # happens whenever the npm dependency set changes.
-          cache-key: flatpak-builder-${{ matrix.arch }}-${{ hashFiles('generated-sources.json') }}
+          arch: x86_64
+          cache-key: flatpak-builder-x86_64-${{ hashFiles('generated-sources.json') }}
+          upload-artifact: true
+
+  build-aarch64:
+    name: Build (aarch64)
+    runs-on: ubuntu-24.04-arm
+    # 6-hour max — Electron + Webpack + Yarn monorepo is slow
+    timeout-minutes: 360
+    # The flathub-infra container image only has a linux/amd64 variant, so
+    # using it on an arm64 runner would pull it under emulation and produce
+    # an x86_64 bundle regardless of the arch parameter.  Instead, run
+    # directly on the native arm64 runner and install flatpak via apt.
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install flatpak tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y flatpak flatpak-builder xvfb
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: Build Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: me.proton.Meet-aarch64.flatpak
+          manifest-path: me.proton.Meet.yml
+          arch: aarch64
+          cache-key: flatpak-builder-aarch64-${{ hashFiles('generated-sources.json') }}
           upload-artifact: true
 
   release:
     name: Publish GitHub Release
-    needs: build
+    needs: [build-x86_64, build-aarch64]
     runs-on: ubuntu-latest
 
     steps:
