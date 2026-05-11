@@ -15,13 +15,43 @@ permissions:
 
 jobs:
   build:
-    name: Build (x86_64)
-    runs-on: ubuntu-latest
+    name: Build (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     # 6-hour max — Electron + Webpack + Yarn monorepo is slow
     timeout-minutes: 360
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
       options: --privileged
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+            bundle: me.proton.Meet.flatpak
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            bundle: me.proton.Meet-aarch64.flatpak
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: ${{ matrix.bundle }}
+          manifest-path: me.proton.Meet.yml
+          # Cache is keyed on arch + generated-sources hash so a clean rebuild
+          # happens whenever the npm dependency set changes.
+          cache-key: flatpak-builder-${{ matrix.arch }}-${{ hashFiles('generated-sources.json') }}
+          upload-artifact: true
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -37,17 +67,13 @@ jobs:
           print(m.group(1) if m else '0.0.0.0')
           ")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Building version: $VERSION"
+          echo "Releasing version: $VERSION"
 
-      - name: Build Flatpak bundle
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          bundle: me.proton.Meet.flatpak
-          manifest-path: me.proton.Meet.yml
-          # Cache is keyed on the generated-sources hash so a clean rebuild
-          # happens whenever the npm dependency set changes.
-          cache-key: flatpak-builder-${{ hashFiles('generated-sources.json') }}
-          upload-artifact: true
+          merge-multiple: true
+          path: .
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -57,7 +83,9 @@ jobs:
           draft: false
           prerelease: false
           make_latest: true
-          files: me.proton.Meet.flatpak
+          files: |
+            me.proton.Meet.flatpak
+            me.proton.Meet-aarch64.flatpak
           body: |
             ## Proton Meet ${{ steps.version.outputs.version }}
 
@@ -65,10 +93,19 @@ jobs:
 
             ### Install
 
-            Download `me.proton.Meet.flatpak` below and run:
+            Download the bundle for your architecture below and run:
 
             ```sh
+            # x86_64
             flatpak install --user me.proton.Meet.flatpak
+
+            # aarch64 / arm64
+            flatpak install --user me.proton.Meet-aarch64.flatpak
+            ```
+
+            Then launch with:
+
+            ```sh
             flatpak run me.proton.Meet
             ```
 
