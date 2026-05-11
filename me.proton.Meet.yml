@@ -1,6 +1,6 @@
 app-id: me.proton.Meet
 runtime: org.freedesktop.Platform
-runtime-version: &runtime-version "25.08"
+runtime-version: &runtime-version '25.08'
 sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.node22
@@ -44,26 +44,26 @@ modules:
         # converted .zip packages back to $YARN_GLOBAL_FOLDER/cache/.
         YARN_GLOBAL_FOLDER: /run/build/proton-meet-desktop/flatpak-node/yarn-berry
         # Yarn Berry offline / telemetry flags
-        YARN_ENABLE_INLINE_BUILDS: "1"
-        YARN_ENABLE_TELEMETRY: "0"
-        YARN_ENABLE_NETWORK: "0"
-        YARN_ENABLE_GLOBAL_CACHE: "0"
+        YARN_ENABLE_INLINE_BUILDS: '1'
+        YARN_ENABLE_TELEMETRY: '0'
+        YARN_ENABLE_NETWORK: '0'
+        YARN_ENABLE_GLOBAL_CACHE: '0'
         # Tells webpack (used internally by electron-forge) to build for production
         NODE_ENV: production
         # Causes `is-ci` (used in the root postinstall script) to return true,
         # which short-circuits "is-ci || (husky; yarn run config-app)" and
         # skips the git-hook installation and config-app steps that fail in a
         # network-isolated sandbox.
-        CI: "1"
+        CI: '1'
         # @sentry/cli postinstall tries to download a pre-built sentry-cli
         # binary from downloads.sentry-cdn.com.  Skip that in the offline
         # sandbox; the binary is only used for uploading source maps in CI
         # and is not needed for the desktop app itself.
-        SENTRY_CLI_SKIP_DOWNLOAD: "1"
+        SENTRY_CLI_SKIP_DOWNLOAD: '1'
         # Yarn 4 auto-enables --immutable when CI=1, which would fail because
         # our package.json patches (step 1b) change the dep graph relative to
         # the committed lockfile.  Explicitly disable it.
-        YARN_ENABLE_IMMUTABLE_INSTALLS: "0"
+        YARN_ENABLE_IMMUTABLE_INSTALLS: '0'
 
     build-commands:
       # ── 1. Patch .yarnrc.yml and remove constraints file ─────────────────
@@ -225,7 +225,8 @@ modules:
       # package, which runs Webpack (TypeScript compilation) and then packages
       # the result into out/*-linux-{x64,arm64}/ using the pre-cached Electron
       # binary from the XDG cache ($XDG_CACHE_HOME/electron/).
-      - cd applications/meet-desktop && node ../../.yarn/releases/yarn-4.13.0.cjs package
+      - cd applications/meet-desktop && node ../../.yarn/releases/yarn-4.13.0.cjs
+        package
 
       # ── 6. Install packaged app ───────────────────────────────────────────
       - install -dm755 ${FLATPAK_DEST}/lib/proton-meet
@@ -273,8 +274,8 @@ modules:
       # ── Upstream source ───────────────────────────────────────────────────
       - type: git
         url: https://github.com/ProtonMail/WebClients
-        tag: proton-meet@0.4.16.0
-        commit: 022bb2a38d393a8ec1deaa34a80ee4887776b557
+        tag: proton-meet@0.4.16.1
+        commit: f63f0de4681c5218991ae682e6a40312f7b4f917
         x-checker-data:
           type: git
           tag-pattern: ^proton-meet@([\d.]+)$
