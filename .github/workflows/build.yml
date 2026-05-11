@@ -43,6 +43,7 @@ jobs:
         with:
           bundle: ${{ matrix.bundle }}
           manifest-path: me.proton.Meet.yml
+          arch: ${{ matrix.arch }}
           # Cache is keyed on arch + generated-sources hash so a clean rebuild
           # happens whenever the npm dependency set changes.
           cache-key: flatpak-builder-${{ matrix.arch }}-${{ hashFiles('generated-sources.json') }}
