@@ -4,7 +4,12 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "me.proton.Meet.yml"
+      # NOTE: me.proton.Meet.yml is intentionally excluded here.
+      # When the upstream tag is bumped, me.proton.Meet.yml changes first and
+      # triggers update-generated-sources, which then opens a PR to update
+      # generated-sources.json.  Merging *that* PR is what triggers the build,
+      # ensuring the manifest and generated sources are always in sync.
+      # For manifest-only changes (e.g. finish-args tweaks) use workflow_dispatch.
       - "generated-sources.json"
       - "me.proton.Meet.desktop"
       - "me.proton.Meet.metainfo.xml"
