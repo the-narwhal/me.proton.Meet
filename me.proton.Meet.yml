@@ -274,8 +274,8 @@ modules:
       # ── Upstream source ───────────────────────────────────────────────────
       - type: git
         url: https://github.com/ProtonMail/WebClients
-        tag: proton-meet@0.4.16.1
-        commit: f63f0de4681c5218991ae682e6a40312f7b4f917
+        tag: proton-meet@0.4.38.1
+        commit: 9396f9756f7ad071270638287ed6951e5662e111
         x-checker-data:
           type: git
           tag-pattern: ^proton-meet@([\d.]+)$
